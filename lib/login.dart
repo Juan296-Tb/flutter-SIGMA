@@ -6,6 +6,8 @@ import 'package:http/http.dart' as http;
 import 'registro.dart';
 import 'responsable.dart';
 
+import 'Admin.dart';
+
 class Login extends StatefulWidget {
   const Login({super.key});
 
@@ -64,30 +66,31 @@ class _LoginState extends State<Login> {
 
       print("RESPUESTA LOGIN: $data");
       print("ROLES: $roles");
+      print("ROLES NORMALIZADOS: $rolesNormalizados");
 
       // 🔥 NAVIGACIÓN
       if (rolesNormalizados.contains("RESPONSABLE")) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
             builder: (_) => Responsable(
-              userId: userId.toString(),
+                userId: userId.toString(),
             ),
-          ),
-        );
-      } 
-      else if (rolesNormalizados.contains("ADMIN")) {
-        dialog("Login exitoso", "Bienvenido Admin");
-      } 
-      else if (rolesNormalizados.contains("GESTOR_TICKETS")) {
-        dialog("Login exitoso", "Bienvenido Gestor");
-      } 
-      else if (rolesNormalizados.contains("TECNI_MANTENIMIENTO")) {
-        dialog("Login exitoso", "Bienvenido Técnico");
-      } 
-      else {
-        dialog("Error", "Rol no reconocido: $roles");
-      }
+        ),
+    );
+  } else if (rolesNormalizados.contains("ADMIN")) {
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (_) => Admin(
+                userId: data["usuario"].toString(),
+                token: data["token"].toString(),
+            ),
+        ),
+    );
+  } else {
+    dialog("Error", "Rol no reconocido: $roles");
+  }
 
     } catch (e) {
       setState(() => loading = false);
